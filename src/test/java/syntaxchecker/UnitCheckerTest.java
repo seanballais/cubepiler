@@ -80,6 +80,7 @@ public class UnitCheckerTest {
         assertEquals(true, unitChecker.isValidExpression("(a / a) + (b + 1 * (c + 2))"));
         assertEquals(true, unitChecker.isValidExpression("!a"));
         assertEquals(true, unitChecker.isValidExpression("a > b & b == 1"));
+        assertEquals(true, unitChecker.isValidExpression("\"string\" + x"))
 
         assertEquals(false, unitChecker.isValidExpression("a++1"));
         assertEquals(false, unitChecker.isValidExpression("a--1"));
@@ -88,6 +89,7 @@ public class UnitCheckerTest {
         assertEquals(false, unitChecker.isValidExpression("a!1"));
         assertEquals(false, unitChecker.isValidExpression("&a + 1"));
         assertEquals(false, unitChecker.isValidExpression("(a + 1"));
+        assertEquals(false, unitChecker.isValidExpression("\"string + x"))
     }
 
     @Test public void testConditionalChecker() {
