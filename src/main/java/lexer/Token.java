@@ -32,11 +32,15 @@ class Token
 {
     private String value;
     private TokenType type;
+    private int startingRow;
+    private int startingColumn;
 
-    public Token(String value, TokenType type)
+    public Token(String value, TokenType type, int startingRow, int startingColumn)
     {
         this.value = value;
         this.type = type;
+        this.startingRow = startingRow;
+        this.startingColumn = startingColumn;
     }
 
     public String getValue()
@@ -47,5 +51,15 @@ class Token
     public TokenType getType()
     {
         return this.type;
+    }
+
+    public int getStartingRow()
+    {
+        return this.startingRow;
+    }
+
+    public int getStartiColumn()
+    {
+        return this.startingColumn;
     }
 }
