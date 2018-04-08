@@ -1,0 +1,155 @@
+
+Basic Symbols, Identifiers, Numbers, and Strings
+
+	The reference language is built up from the following 
+	BASIC SYMBOLS:
+
+		<basic symbol> := <letter> | <digit> | <logical value> | <delimiter>
+	
+		<letters> := a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
+					|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
+
+		<digit> := 0|1|2|3|4|5|6|7|8|9
+
+		<logical values> := true|false
+
+		<delimiter> := <operator> | <separator> | <bracket> | <identifier> 
+		
+		<operator> := <arithmetic operator> | <relational operator> | <logical operator> | <sequential operator>
+		
+		<arithmetic operator> := + | - | * | / | % | ^
+		
+		<relational operator> := < | > | == | <= | >= | !=
+		
+		<logical operator> := & | | | !
+		
+		<sequential operator> := if | else | for 
+		
+		<separator> := # | ## | =
+		
+		<bracket> := ( | ) | [ | ] | do | end
+
+	**Letters do not have individual meaning. They are used for 
+	forming identifiers and strings. Digits are used for forming numbers,
+	identifiers, and strings.)		
+
+	
+	IDENTIFIER Syntax:
+
+		<identifier> := <letter> | <identifier> <letter> | <identifier> <digit>
+
+
+		Examples: q, Soup, V12a, a32GkMPR, MARIA
+
+		**Semantics:
+			Identifiers have no inherent meaning, but serve for the identification of simple
+			variables, and procedures. They may be chosen freely. The same identifier cannot 
+			be used to denote two different quantities except when these quantities have disjoint scopes.
+
+	NUMBERS Syntax:
+
+		<unsigned integer> := <digit> | <unsigned integer> <digit>
+		
+		<integer> := <unsigned integer> | - <unsigned integer>
+		
+		<decimal fraction> := .<unsigned integer>
+
+		<decimal number> := <unsigned integer> | <decimal fraction> | <unsigned integer> <decimal fraction>
+
+		<unsigned number> := <decimal number>
+
+		<number> := <unsigned number> | - <unsigned number>
+
+
+
+		Examples: 0, 117, -117, .4123, 9.001, -.4123, -9.001
+
+
+	STRINGS Syntax:
+
+		<proper string> := <any sequence of basic symbols> | <empty>
+
+		<string > := "<proper string>"
+
+
+	EXPRESSIONS Syntax:
+
+		<expression> := <arithmetic expression> | <boolean expression> 
+						| <designational expression>
+
+
+	VARIABLES Syntax:
+
+		<variable identifier> := <identifier>			
+		
+		<variable> := <variable identifier>
+
+
+	FUNCTION DESIGNATORS Syntax:
+
+		<procedure identifier> := <identifier>
+
+		<actual parameter> := <string> | <expression> | <procedure identifier>
+
+		<letter string> := <letter> | <letter string> <letter> 
+
+		<actual parameter list> := <actual parameter> | <actual parameter list> , <actual parameter>
+
+		<actual parameter part> := <empty> | (<actual parameter list>)
+
+		<function designator> := <procedure identifier> <actual parameter part>
+
+
+		Examples: nuke("Tacloban"), nuke(n + 1, cities)
+
+
+	ARITHMETIC EXPRESSIONS Syntax:
+
+		<adding operator> := + | -
+		
+		<multiplying operator := * | / | %
+		
+		<primary> := <unsigned number> | <variable> | <function designator> | (arithmetic expression)
+
+		<factor> := <primary> | <factor> ^ <primary>
+
+		<term> := <factor> | <term> <multiplying operator> <factor>
+
+		<simple arithmetic expression> := <term> | <adding operator> <term> | <simple arithmetic expression> <adding operator> <term>
+
+		<if clause> := if <Boolean expression> 
+
+		<arithmetic expression> := <simple arithmetic expression> | <if clause> <simple arithmetic expression> | <if clause> <simple arithmetic expression> else <arithmetic expression> 
+
+
+	BOOLEAN EXPRESSIONS Syntax:
+
+		<relational operator> := < | <= | = | >= | > | !=
+
+		<relation> := <simple arithmetic expression> <relational operator> <simple arithmetic expression>
+
+		<boolean primary> := <logical value> | <variable> | <function designator> | <relation> | (boolean expression)
+
+		<boolean secondary> := <boolean primary> | !<boolean primary>
+
+		<boolean factor> := <boolean secondary> | <boolean factor> && <boolean secondary>
+
+		<boolean term> := <boolean factor> | <boolean term> || <boolean factor>
+
+		<boolean expression> := <simple boolean> | <if clause> <boolean term> else <boolean expression>
+
+
+	COMPOUND STATEMENTS and BLOCKS
+		...
+
+	ASSIGNMENT STATEMENTS
+		...
+	CONDITIONAL STATEMENTS
+		...
+	FOR STATEMENTS
+		...
+	PROCEDURE STATEMENTS
+		...
+	PROCEDURE DECLARATION
+		...
+
