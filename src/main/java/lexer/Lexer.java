@@ -17,6 +17,7 @@ public class Lexer
         // We start at 1 for the rows and columns since they usually
         // start at 1, notably in text editors.
         this.currentLine = 1;
+        this.currentColumn = 1;
     }
 
     public LinkedList<String> getTokens(String source) throws SourceException
@@ -32,8 +33,10 @@ public class Lexer
     private void tokenize() throws SourceException
     {
         // This just separates the characters into appriopriate tokens
-        // in non-discriminatory manner (i.e. does not identify the
-        // token type yet).
+        // in a non-discriminatory manner (i.e. does not identify the
+        // token type yet, if the syntax is valid, or if it's a valid
+        // symbol). However, it will try to make sure that the number is
+        // in the correct form (e.g. no double decimals in the same number).
         char c;
         for (this.currentCharIndex = 0,
              c = this.source.charAt(this.currentCharIndex);
@@ -41,6 +44,14 @@ public class Lexer
             if (Character.isDigit(c)) {
                 // Check for numerical data types.
                 handleNumbers();
+            } else if (c == '"') {
+                handleStrings();
+            } else if (Character.isLetter(c)) {
+                handleSymbols();
+            } else if (c == '\n') {
+                this.tokens.add("newline");
+            } else if (!Character.isWhitespace(c)) {
+                this.tokens.add(String.format("%c", c));
             }
 
             c = updateCurrentCharacter();
@@ -52,10 +63,7 @@ public class Lexer
         char c = this.source.charAt(this.currentCharIndex);
         boolean hasDecimalPoint = false;
         String number = "";
-        while (!Character.isWhitespace(c)
-               && c != ','  // For cases where we pass integers as arguments in functions.
-               && c != ')'  // For cases where we pass integers as arguments as well.
-               && c != '\0') {
+        while (Character.isDigit(c) || c == '.') {
             if (Character.isDigit(c)) {
                 number += c;
             } else if (c == '.') {
@@ -78,6 +86,57 @@ public class Lexer
 
         if (number != "") {
             this.tokens.add(number);
+        }
+    }
+
+    private void handleStrings() throws SourceException
+    {
+        String stringToken = "\"";  // We already know that the start is a double quote.
+        this.currentCharIndex++;  // We immediately move to the next character since there is no
+                                  // need to parse the first double quote again.
+
+        // We should prolly borrow Python's feature where it allows breaking a string in
+        // multiple lines using '\'. Yet, it is just one string.
+        // e.g.
+        //     some_str = "the string is " \
+        //                "actually connected."
+        // Value of some_str: "this string is actually connected.".
+
+        char c = this.source.charAt(this.currentCharIndex);
+        while (c != '"' && c != '\0') {  // There must be a pair to the first quote 
+                                         // before we exit the loop.
+            stringToken += c;
+
+            // TODO: Add edge case where a double quote is inside a string.
+
+            c = updateCurrentCharacter();
+        }
+
+        if (c == '"') {
+            stringToken += '"';
+        } else {
+            throw new SourceException("Expected matching closing double quote.",
+                                      this.currentLine,
+                                      this.currentColumn);
+        }
+
+        if (stringToken.charAt(0) == '"'
+            && stringToken.charAt(stringToken.length() - 1) == '"') {
+            this.tokens.add(stringToken);
+        }
+    }
+
+    private void handleSymbols()
+    {
+        String symbol = "";
+        char c = this.source.charAt(this.currentCharIndex);
+        while (Character.isLetter(c)) {
+            symbol += c;
+            c = updateCurrentCharacter();
+        }
+
+        if (symbol != "") {
+            this.tokens.add(symbol);
         }
     }
 
