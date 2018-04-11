@@ -42,23 +42,26 @@ public class Lexer
              c = this.source.charAt(this.currentCharIndex);
              this.currentCharIndex < this.source.length();) {
             if (Character.isDigit(c)) {
-                // Check for numerical data types.
-                handleNumbers();
+                c = handleNumbers();
             } else if (c == '"') {
-                handleStrings();
+                c = handleStrings('"');
+            } else if (c == '\'') {
+                c = handleStrings('\'');
             } else if (Character.isLetter(c)) {
-                handleSymbols();
-            } else if (c == '\n') {
+                c = handleSymbols();
+            } else if (c == '\n') {                
                 this.tokens.add("newline");
+                c = moveToNextCharacter();
             } else if (!Character.isWhitespace(c)) {
                 this.tokens.add(String.format("%c", c));
+                c = moveToNextCharacter();
+            } else {
+                c = moveToNextCharacter();
             }
-
-            c = updateCurrentCharacter();
         }
     }
 
-    private void handleNumbers() throws SourceException
+    private char handleNumbers() throws SourceException
     {
         char c = this.source.charAt(this.currentCharIndex);
         boolean hasDecimalPoint = false;
@@ -81,17 +84,19 @@ public class Lexer
                                           this.currentColumn);
             }
 
-            c = updateCurrentCharacter();
+            c = moveToNextCharacter();
         }
 
         if (number != "") {
             this.tokens.add(number);
         }
+
+        return c;
     }
 
-    private void handleStrings() throws SourceException
+    private char handleStrings(char startQuote) throws SourceException
     {
-        String stringToken = "\"";  // We already know that the start is a double quote.
+        String stringToken = String.format("%c", startQuote);  // We already know that the start is a double quote.
         this.currentCharIndex++;  // We immediately move to the next character since there is no
                                   // need to parse the first double quote again.
 
@@ -103,44 +108,61 @@ public class Lexer
         // Value of some_str: "this string is actually connected.".
 
         char c = this.source.charAt(this.currentCharIndex);
-        while (c != '"' && c != '\0') {  // There must be a pair to the first quote 
-                                         // before we exit the loop.
-            stringToken += c;
+        boolean mustEscapeCharacter = false;
+        while ((c != startQuote || mustEscapeCharacter)
+               && c != '\0') {  // There must be a pair to the first quote 
+                                // before we exit the loop.
+            if (mustEscapeCharacter) {
+                stringToken += unescapeSequence("\\" + c);
+                mustEscapeCharacter = false;
+            } else if (c == '\\') {
+                mustEscapeCharacter = true;
+            } else {
+                stringToken += c;
+            }
 
-            // TODO: Add edge case where a double quote is inside a string.
-
-            c = updateCurrentCharacter();
+            c = moveToNextCharacter();
         }
 
-        if (c == '"') {
-            stringToken += '"';
+        if (c == startQuote) {
+            stringToken += startQuote;
+            c = moveToNextCharacter();  // Must be explicitly called. Otherwise, we would be
+                                        // pointing to the last quote, and when we go back
+                                        // to the main lexing loop, the current character
+                                        // being pointed to would be the last quote which
+                                        // would make the main lexing loop assume it is
+                                        // the start of another string.
         } else {
-            throw new SourceException("Expected matching closing double quote.",
+            throw new SourceException("Expected matching closing quote.",
                                       this.currentLine,
                                       this.currentColumn);
         }
 
-        if (stringToken.charAt(0) == '"'
-            && stringToken.charAt(stringToken.length() - 1) == '"') {
+        if (stringToken.charAt(0) == startQuote
+            && stringToken.charAt(stringToken.length() - 1) == startQuote) {
             this.tokens.add(stringToken);
         }
+
+        return c;
     }
 
-    private void handleSymbols()
+    private char handleSymbols()
     {
         String symbol = "";
         char c = this.source.charAt(this.currentCharIndex);
-        while (Character.isLetter(c)) {
+        while (Character.isLetter(c) || Character.isDigit(c) || c == '_') {
             symbol += c;
-            c = updateCurrentCharacter();
+            c = moveToNextCharacter();
         }
 
         if (symbol != "") {
             this.tokens.add(symbol);
         }
+
+        return c;
     }
 
-    private char updateCurrentCharacter()
+    private char moveToNextCharacter()
     {
         this.currentCharIndex++;
 
@@ -158,5 +180,33 @@ public class Lexer
         }
 
         return c;
+    }
+
+    private char unescapeSequence(String escapedSequence) throws SourceException
+    {
+        // We'll be following the escape sequences supported by Java.
+        switch (escapedSequence) {
+            case "\\'":
+                return '\'';
+            case "\\\"":
+                return '"';
+            case "\\\\":
+                return '\\';
+            case "\\n":
+                return '\n';
+            case "\\r":
+                return '\r';
+            case "\\t":
+                return '\t';
+            case "\\b":
+                return '\b';
+            case "\\f":
+                return '\f';
+            default:
+                throw new SourceException("Invalid escape sequence. Valid ones are '\\\'', "
+                                          + "'\\\"', '\\\\', '\\n', '\\r', '\\t'. '\\b', and '\\f'",
+                                          this.currentLine,
+                                          this.currentColumn);
+        }
     }
 }
