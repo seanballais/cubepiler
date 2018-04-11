@@ -1,0 +1,3 @@
+var some_str = "Lol\""
+some_str = !(some_str)
+var num = 2c
