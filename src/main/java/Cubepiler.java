@@ -1,18 +1,19 @@
-import lexer.Lexer;
+import lexer.NewLexer;
+import lexer.Token;
 import lexer.SourceException;
 
 public class Cubepiler {
-    private static String testSource = "2345 1234\n9.87varif if lol (xd)\"This must be parsed out.\"(lol)100 if";
+    private static String testSource = "2345 1234\n9.a87varif if lol (xd)\"This must be parsed out.\"(lol)100 if";
 
     public static void main(String[] args) {
-        Lexer lexer = new Lexer();
+        NewLexer lexer = new NewLexer();
         
         try {
             System.out.println("Test Source: " + testSource);
             System.out.println("Tokens");
             int itemNumber = 0;
-            for (String token : lexer.getTokens(testSource)) {
-                System.out.println(String.format("%d) %s", itemNumber, token));
+            for (Token token : lexer.getTokens(testSource)) {
+                System.out.println(String.format("%d) %s", itemNumber, token.getValue()));
                 itemNumber++;
             }
         } catch (SourceException se) {
