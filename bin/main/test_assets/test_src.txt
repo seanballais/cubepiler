@@ -3,5 +3,7 @@ fn add(num1, num2)
 end
 
 fn main()
+    var x = 1.a23
+    var x.1 = 1
     print("The sum of 1 and 1 is " + add(1, 1))
 end

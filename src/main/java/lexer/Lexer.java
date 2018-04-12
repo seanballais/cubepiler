@@ -71,11 +71,15 @@ public class Lexer
         char c = this.source.charAt(this.currentCharIndex);
         boolean hasDecimalPoint = false;
         String number = "";
+        boolean justPastDecimalPoint = false;
         int numberStartLine = this.currentLine;
         int numberStartColumn = this.currentColumn;
+        int decimalPointStartLine = 0;
+        int decimalPointStartColumn = 0;
         while (Character.isDigit(c) || c == '.') {
             if (Character.isDigit(c)) {
                 number += c;
+                justPastDecimalPoint = false;
             } else if (c == '.') {
                 if (hasDecimalPoint) {
                     throw new SourceException("Decimal number has too many decimal points.",
@@ -84,6 +88,14 @@ public class Lexer
                 } else {
                     number += '.';
                     hasDecimalPoint = true;
+                    justPastDecimalPoint = true;
+                    decimalPointStartLine = this.currentLine;
+                    decimalPointStartColumn = this.currentColumn - 1; // Idk why but if we
+                                                                      // don't subtract this by
+                                                                      // one, we point to the
+                                                                      // wrong character and not
+                                                                      // the decimal point itself.
+                                                                      // TODO: Please fix this.
                 }
             } else {
                 throw new SourceException("Unexpected character.",
@@ -92,6 +104,12 @@ public class Lexer
             }
 
             c = moveToNextCharacter();
+        }
+
+        if (justPastDecimalPoint) {
+            throw new SourceException("There must be a number after the decimal point.",
+                                      decimalPointStartLine,
+                                      decimalPointStartColumn);
         }
 
         if (number != "") {
@@ -106,7 +124,7 @@ public class Lexer
                                       type,
                                       numberStartLine,
                                       numberStartColumn));
-        }
+        } 
 
         return c;
     }
