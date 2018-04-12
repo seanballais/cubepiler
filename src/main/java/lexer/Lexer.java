@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class Lexer
 {
     private String source;
-    private LinkedList<String> tokens;
+    private LinkedList<Token> tokens;
     private int currentLine;
     private int currentColumn;
     private int currentCharIndex;
@@ -20,7 +20,7 @@ public class Lexer
         this.currentColumn = 1;
     }
 
-    public LinkedList<String> getTokens(String source) throws SourceException
+    public LinkedList<Token> getTokens(String source) throws SourceException
     {
         this.tokens.clear();
         this.source = source;
@@ -88,7 +88,14 @@ public class Lexer
         }
 
         if (number != "") {
-            this.tokens.add(number);
+            TokenType type;
+            if (hasDecimalPoint) {
+                type = TokenType.FLOAT;
+            } else {
+                type = TokenType.INTEGER;
+            }
+
+            this.tokens.add(new Token(number, type, this.currentLine, this.currentColumn));
         }
 
         return c;
