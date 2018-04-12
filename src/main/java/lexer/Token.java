@@ -9,20 +9,44 @@ enum TokenType
     BOOLEAN,
     STRING,
 
-    // Operators
-    ARITHMETIC_OPERATOR,
-    LOGICAL_OPERATOR,
-    ASSIGHNMENT_OPERATOR,
-    COMPARISON_OPERATOR,
+    // Arithmetic Operators
+    ADDITION,
+		SUBTRACTION,
+		DIVISION,
+		MULTIPLICATION,
+		EXPONENT,
+		ASSIGNMENT,
+		MODULO,
+		
+		// Logical Operators
+		AND,
+		OR,
+		NOT,
+		
+		// Relational Operators
+		G_THAN,
+		L_THAN,
+		EQUAL,
+		N_EQUAL,
+		G_EQUAL,
+		L_EQUAL
     
-    // Reserved words
-    BREAK_KEYWORD,
-    RETURN_KEYWORD,
-    END_KEYWORD,
-    IF_KEYWORD,
-    ELSE_KEYWORD,
-    FUNCTION_DECLARATION,
-    VARIABLE_DECLARATION,
+    // Key Words
+    BREAK,
+		NEXT,
+		DO,
+		RETURN,
+		FN,
+		VAR,
+		END,
+		IF,
+		ELSIF,
+		ELSE,
+		WHILE,
+		
+		//Boolean Values
+		TRUE,
+		FALSE,
 
     // Miscellaneous
     USER_DEFINED_NAME

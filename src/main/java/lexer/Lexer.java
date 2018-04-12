@@ -85,7 +85,7 @@ public class Lexer
         }
 
         if (number != "") {
-            this.tokens.add(number);
+					this.tokens.add(number);
         }
 
         this.currentCharIndex--;
@@ -94,6 +94,8 @@ public class Lexer
     private void handleStrings() throws SourceException
     {
         String stringToken = "\"";  // We already know that the start is a double quote.
+				int sLine = this.currentLine;
+				int sColumn = this.currentColumn;
         this.currentCharIndex++;  // We immediately move to the next character since there is no
                                   // need to parse the first double quote again.
 
@@ -123,14 +125,17 @@ public class Lexer
         }
 
         if (stringToken.charAt(0) == '"'
-            && stringToken.charAt(stringToken.length() - 1) == '"') {
-            this.tokens.add(stringToken);
+					&& stringToken.charAt(stringToken.length() - 1) == '"') {
+					Token newStringToken = new Token(stringToken, TokenType.STRING, sLine, sColumn);
+					this.tokens.add(newStringToken);
         }
     }
 
     private void handleSymbols()
     {
         String symbol = "";
+				int sLine = this.currentLine;
+				int sColumn = this.currentColumn;
         char c = this.source.charAt(this.currentCharIndex);
         while (Character.isLetter(c)) {
             symbol += c;
@@ -138,7 +143,8 @@ public class Lexer
         }
 
         if (symbol != "") {
-            this.tokens.add(symbol);
+						Token newSymbol = new Token(symbol, TokenType.CHARACTER, sLine, sColumn);
+            this.tokens.add(newSymbol);
         }
 
         this.currentCharIndex--;
