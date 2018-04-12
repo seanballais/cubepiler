@@ -2,10 +2,15 @@ package lexer;
 
 import java.util.LinkedList;
 
+import static org.junit.Assume.assumeNoException;
+
+import java.util.HashSet;
+
 public class Lexer
 {
     private String source;
     private LinkedList<Token> tokens;
+    private HashSet<String> reservedSymbols;
     private int currentLine;
     private int currentColumn;
     private int currentCharIndex;
@@ -13,6 +18,7 @@ public class Lexer
     public Lexer()
     {
         this.tokens = new LinkedList<>();
+        this.reservedSymbols = new HashSet<>();
 
         // We start at 1 for the rows and columns since they usually
         // start at 1, notably in text editors.
@@ -50,11 +56,13 @@ public class Lexer
             } else if (Character.isLetter(c)) {
                 c = handleSymbols();
             } else if (c == '\n') {                
-                this.tokens.add("newline");
+                this.tokens.add(new Token("newline",
+                                          TokenType.NEWLINE,
+                                          this.currentLine,
+                                          getTokenStart("newline")));
                 c = moveToNextCharacter();
             } else if (!Character.isWhitespace(c)) {
-                this.tokens.add(String.format("%c", c));
-                c = moveToNextCharacter();
+                c = handleOperators();
             } else {
                 c = moveToNextCharacter();
             }
@@ -95,7 +103,10 @@ public class Lexer
                 type = TokenType.INTEGER;
             }
 
-            this.tokens.add(new Token(number, type, this.currentLine, this.currentColumn));
+            this.tokens.add(new Token(number,
+                                      type,
+                                      this.currentLine,
+                                      getTokenStart(number)));
         }
 
         return c;
@@ -103,7 +114,7 @@ public class Lexer
 
     private char handleStrings(char startQuote) throws SourceException
     {
-        String stringToken = String.format("%c", startQuote);  // We already know that the start is a double quote.
+        String stringToken = "";
         this.currentCharIndex++;  // We immediately move to the next character since there is no
                                   // need to parse the first double quote again.
 
@@ -132,22 +143,23 @@ public class Lexer
         }
 
         if (c == startQuote) {
-            stringToken += startQuote;
             c = moveToNextCharacter();  // Must be explicitly called. Otherwise, we would be
                                         // pointing to the last quote, and when we go back
                                         // to the main lexing loop, the current character
                                         // being pointed to would be the last quote which
                                         // would make the main lexing loop assume it is
                                         // the start of another string.
+
+            // We add the token here since, at this point, the string is presumably valid.
+            // There might be a few edge cases that would make the presumption false.
+            this.tokens.add(new Token(stringToken,
+                                      TokenType.STRING,
+                                      this.currentLine,
+                                      getTokenStart(stringToken)));
         } else {
             throw new SourceException("Expected matching closing quote.",
                                       this.currentLine,
-                                      this.currentColumn);
-        }
-
-        if (stringToken.charAt(0) == startQuote
-            && stringToken.charAt(stringToken.length() - 1) == startQuote) {
-            this.tokens.add(stringToken);
+                                      getTokenStart(stringToken));
         }
 
         return c;
@@ -163,8 +175,84 @@ public class Lexer
         }
 
         if (symbol != "") {
-            this.tokens.add(symbol);
+            TokenType type;
+
+            switch (symbol) {
+                case "break":
+                    type = TokenType.BREAK_KEYWORD;
+                    break;
+                case "return":
+                    type = TokenType.RETURN_KEYWORD;
+                    break;
+                case "end":
+                    type = TokenType.END_KEYWORD;
+                    break;
+                case "if":
+                    type = TokenType.IF_KEYWORD;
+                    break;
+                case "else":
+                    type = TokenType.ELSE_KEYWORD;
+                    break;
+                case "fn":
+                    type = TokenType.FUNCTION_DECLARATION;
+                    break;
+                case "var":
+                    type = TokenType.VARIABLE_DECLARATION;
+                    break;
+                case "true":
+                    type = TokenType.BOOLEAN;
+                    break;
+                case "false":
+                    type = TokenType.BOOLEAN;
+                    break;
+                default:
+                    type = TokenType.USER_DEFINED_SYMBOL;
+                    break;
+            }
+
+            this.tokens.add(new Token(symbol, type, this.currentLine, getTokenStart(symbol)));
         }
+
+        return c;
+    }
+
+    private char handleOperators() throws SourceException
+    {
+        String operator = String.format("%c", this.source.charAt(this.currentCharIndex));
+        char operatorSymbolPartner = this.source.charAt(this.currentCharIndex);
+        char c = '\0';
+
+        c = moveToNextCharacter();
+
+        if (operatorSymbolPartner == '=') {
+            operator += "=";
+            c = moveToNextCharacter();
+        }
+
+        TokenType type;
+        if (operator == "+" || operator == "+="
+                || operator == "-" || operator == "-="
+                || operator == "*" || operator == "*="
+                || operator == "/" || operator == "/="
+                || operator == "%" || operator == "%="
+                || operator == "^" || operator == "^=") {
+            type = TokenType.ARITHMETIC_OPERATOR;
+        } else if (operator == "=") {
+            type = TokenType.ASSIGNMENT_OPERATOR;
+        } else if (operator == "&" || operator == "|" || operator == "!") {
+            type = TokenType.LOGICAL_OPERATOR;
+        } else if (operator == "==" || operator == "!="
+                   || operator == ">" || operator == ">="
+                   || operator == "<" || operator == "<=") {
+            type = TokenType.COMPARISON_OPERATOR;
+        } else {
+            // Oh, no!
+            throw new SourceException("Unsupported operator.",
+                                      this.currentLine,
+                                      getTokenStart(operator));
+        }
+
+        this.tokens.add(new Token(operator, type, this.currentLine, getTokenStart(operator)));
 
         return c;
     }
@@ -213,7 +301,12 @@ public class Lexer
                 throw new SourceException("Invalid escape sequence. Valid ones are '\\\'', "
                                           + "'\\\"', '\\\\', '\\n', '\\r', '\\t'. '\\b', and '\\f'",
                                           this.currentLine,
-                                          this.currentColumn);
+                                          getTokenStart(escapedSequence));
         }
+    }
+
+    private int getTokenStart(String tokenValue)
+    {
+        return this.currentColumn - tokenValue.length();
     }
 }

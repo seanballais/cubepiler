@@ -34,4 +34,13 @@ public class Token
     {
         return this.startingColumn;
     }
+
+    public String toString()
+    {
+        return String.format("%s\t%s\t(Line: %d, Column: %d)",
+                             this.value,
+                             this.type.toString(),
+                             this.startingLine,
+                             this.startingColumn);
+    }
 }

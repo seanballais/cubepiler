@@ -1,5 +1,6 @@
 import lexer.Lexer;
 import lexer.SourceException;
+import lexer.Token;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -26,8 +27,8 @@ public class Cubepiler {
             System.out.println(testSource);
             System.out.println("Tokens");
             int itemNumber = 0;
-            for (String token : lexer.getTokens(testSource)) {
-                System.out.println(String.format("%d)\t%s", itemNumber, token));
+            for (Token token : lexer.getTokens(testSource)) {
+                System.out.println(String.format("%d)\t%s", itemNumber, token.toString()));
                 itemNumber++;
             }
 
