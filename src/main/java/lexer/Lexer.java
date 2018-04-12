@@ -87,6 +87,8 @@ public class Lexer
         if (number != "") {
             this.tokens.add(number);
         }
+
+        this.currentCharIndex--;
     }
 
     private void handleStrings() throws SourceException
@@ -138,6 +140,8 @@ public class Lexer
         if (symbol != "") {
             this.tokens.add(symbol);
         }
+
+        this.currentCharIndex--;
     }
 
     private char updateCurrentCharacter()
