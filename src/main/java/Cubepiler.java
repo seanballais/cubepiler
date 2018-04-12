@@ -1,12 +1,12 @@
-import lexer.NewLexer;
+import lexer.Lexer;
 import lexer.Token;
 import lexer.SourceException;
 
 public class Cubepiler {
-    private static String testSource = "fn main(var arg)\nprint(\"Hello world!\")\nend";
+    private static String testSource = "fn main(var arg)\nprint(\"Hello world!\")\nvar sum = 1 + 1\nif sum >= 2\nprint(\"GREATER\")\nend\nend";
 
     public static void main(String[] args) {
-        NewLexer lexer = new NewLexer();
+        Lexer lexer = new Lexer();
         
         try {
             System.out.println("Test Source: " + testSource);

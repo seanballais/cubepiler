@@ -3,7 +3,7 @@ package lexer;
 import java.util.LinkedList;
 import lexer.Token;
 
-public class NewLexer {
+public class Lexer {
     private String source;
     private LinkedList<Token> tokens;
     private int currentLine;
@@ -12,7 +12,7 @@ public class NewLexer {
     private int sLine;
     private int sColumn;
 
-    public NewLexer() {
+    public Lexer() {
         this.tokens = new LinkedList<>();
 
         this.currentLine = 1;
@@ -41,7 +41,7 @@ public class NewLexer {
             } else if (Character.isLetter(c)) {
                 handleWords();
             } else if (c == '\n') {
-                this.tokens.add(new Token("newLine", Token.TokenType.CHARACTER, sLine, sColumn));
+                this.tokens.add(new Token("newLine", Token.TokenType.SEPARATOR, sLine, sColumn));
                 this.currentLine++;
             } else if (isSymbol(c)) {
                 handleSymbols();
