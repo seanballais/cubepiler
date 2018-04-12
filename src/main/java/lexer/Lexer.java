@@ -1,9 +1,6 @@
 package lexer;
 
 import java.util.LinkedList;
-
-import static org.junit.Assume.assumeNoException;
-
 import java.util.HashSet;
 
 public class Lexer
@@ -59,7 +56,7 @@ public class Lexer
                 this.tokens.add(new Token("newline",
                                           TokenType.NEWLINE,
                                           this.currentLine,
-                                          getTokenStart("newline")));
+                                          getTokenStart("\n")));
                 c = moveToNextCharacter();
             } else if (!Character.isWhitespace(c)) {
                 c = handleOperators();
@@ -219,10 +216,11 @@ public class Lexer
     private char handleOperators() throws SourceException
     {
         String operator = String.format("%c", this.source.charAt(this.currentCharIndex));
-        char operatorSymbolPartner = this.source.charAt(this.currentCharIndex);
-        char c = '\0';
+        char c = moveToNextCharacter(); // Move to the next character so that we get the right
+                                        // operator symbol pair of the operator we captured,
+                                        // in case there is one.
 
-        c = moveToNextCharacter();
+        char operatorSymbolPartner = this.source.charAt(this.currentCharIndex);
 
         if (operatorSymbolPartner == '=') {
             operator += "=";
@@ -230,21 +228,23 @@ public class Lexer
         }
 
         TokenType type;
-        if (operator == "+" || operator == "+="
-                || operator == "-" || operator == "-="
-                || operator == "*" || operator == "*="
-                || operator == "/" || operator == "/="
-                || operator == "%" || operator == "%="
-                || operator == "^" || operator == "^=") {
+        if (operator.equals("+") || operator.equals("+=")
+                || operator.equals("-") || operator.equals("-=")
+                || operator.equals("*") || operator.equals("*=")
+                || operator.equals("/") || operator.equals("/=")
+                || operator.equals("%") || operator.equals("%=")
+                || operator.equals("^") || operator.equals("^=")) {
             type = TokenType.ARITHMETIC_OPERATOR;
-        } else if (operator == "=") {
+        } else if (operator.equals("=")) {
             type = TokenType.ASSIGNMENT_OPERATOR;
-        } else if (operator == "&" || operator == "|" || operator == "!") {
+        } else if (operator.equals("&") || operator.equals("|") || operator.equals("!")) {
             type = TokenType.LOGICAL_OPERATOR;
-        } else if (operator == "==" || operator == "!="
-                   || operator == ">" || operator == ">="
-                   || operator == "<" || operator == "<=") {
+        } else if (operator.equals("==") || operator.equals("!=")
+                   || operator.equals(">") || operator.equals(">=")
+                   || operator.equals("<") || operator.equals("<=")) {
             type = TokenType.COMPARISON_OPERATOR;
+        } else if (operator.equals("(") || operator.equals(")") || operator.equals(",")) {
+            type = TokenType.SEPARATOR;
         } else {
             // Oh, no!
             throw new SourceException("Unsupported operator.",
@@ -269,7 +269,7 @@ public class Lexer
 
         if (c == '\n') {
             this.currentLine++;
-            this.currentColumn = 0;
+            this.currentColumn = 1;
         } else {
             this.currentColumn++;
         }

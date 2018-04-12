@@ -1,3 +1,7 @@
-var some_str = "Lol\""
-some_str = !(some_str)
-var num = 2c
+fn add(num1, num2)
+    return num1 + num2
+end
+
+fn main()
+    print("The sum of 1 and 1 is " + add(1, 1))
+end
