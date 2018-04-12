@@ -3,7 +3,7 @@ import lexer.Token;
 import lexer.SourceException;
 
 public class Cubepiler {
-    private static String testSource = "2345 1234\n9.a87varif if lol (xd)\"This must be parsed out.\"(lol)100 if";
+    private static String testSource = "fn main(var arg)\nprint(\"Hello world!\")\nend";
 
     public static void main(String[] args) {
         NewLexer lexer = new NewLexer();
@@ -13,7 +13,7 @@ public class Cubepiler {
             System.out.println("Tokens");
             int itemNumber = 0;
             for (Token token : lexer.getTokens(testSource)) {
-                System.out.println(String.format("%d) %s", itemNumber, token.getValue()));
+                System.out.println(String.format("%d) %s\t%s\tl:%d c:%d", itemNumber, token.getValue(), token.getType(), token.getStartingRow(), token.getStartingColumn()));
                 itemNumber++;
             }
         } catch (SourceException se) {

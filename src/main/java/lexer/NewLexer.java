@@ -42,6 +42,7 @@ public class NewLexer {
                 handleWords();
             } else if (c == '\n') {
                 this.tokens.add(new Token("newLine", Token.TokenType.CHARACTER, sLine, sColumn));
+                this.currentLine++;
             } else if (isSymbol(c)) {
                 handleSymbols();
             }
@@ -84,6 +85,7 @@ public class NewLexer {
         }
 
         this.currentCharIndex--;
+        this.currentColumn--;
     }
 
     private void handleStrings() throws SourceException {
@@ -128,6 +130,7 @@ public class NewLexer {
         }
 
         this.currentCharIndex--;
+        this.currentColumn--;
     }
 
     private void handleSymbols() {
@@ -144,6 +147,7 @@ public class NewLexer {
             this.tokens.add(new Token(symbol, getType(symbol), sLine, sColumn));
 
         this.currentCharIndex--;
+        this.currentColumn--;
     }
 
     private Token.TokenType getType(String word) {
@@ -205,6 +209,12 @@ public class NewLexer {
             return Token.TokenType.G_EQUAL;
         else if (word.equals("<="))
             return Token.TokenType.L_EQUAL;
+        else if (word.equals("("))
+            return Token.TokenType.O_PARENTHESIS;
+        else if (word.equals(")"))
+            return Token.TokenType.C_PARENTHESIS;
+        else if (word.equals(","))
+            return Token.TokenType.SEPARATOR;
         else
             return Token.TokenType.USER_DEFINED_NAME;
     }
@@ -221,12 +231,7 @@ public class NewLexer {
 
         char c = this.source.charAt(this.currentCharIndex);
 
-        if (c == '\n') {
-            this.currentLine++;
-            this.currentColumn = 0;
-        } else {
-            this.currentColumn++;
-        }
+        this.currentColumn++;
 
         return c;
     }

@@ -49,7 +49,10 @@ public class Token
         FALSE,
 
         // Miscellaneous
-        USER_DEFINED_NAME
+        USER_DEFINED_NAME,
+        O_PARENTHESIS,
+        C_PARENTHESIS,
+        SEPARATOR
     }
 
     private String value;
@@ -80,7 +83,7 @@ public class Token
         return this.startingRow;
     }
 
-    public int getStartiColumn()
+    public int getStartingColumn()
     {
         return this.startingColumn;
     }
