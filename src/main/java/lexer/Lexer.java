@@ -94,7 +94,8 @@ public class Lexer
                                                                       // don't subtract this by
                                                                       // one, we point to the
                                                                       // wrong character and not
-                                                                      // the decimal point itself.
+                                                                      // the decimal point itself,
+                                                                      // in the error message.
                                                                       // TODO: Please fix this.
                 }
             } else {
@@ -184,7 +185,7 @@ public class Lexer
         return c;
     }
 
-    private char handleSymbols()
+    private char handleSymbols() throws SourceException
     {
         String symbol = "";
         int symbolStartLine = this.currentLine;
@@ -193,6 +194,13 @@ public class Lexer
         while (Character.isLetter(c) || Character.isDigit(c) || c == '_') {
             symbol += c;
             c = moveToNextCharacter();
+        }
+
+        if (c == '.') {
+            // SERIOUSLY! There is a bug in the column number it gives the error messages,
+            throw new SourceException("Symbols cannot have periods in their names.",
+                                      this.currentLine,
+                                      this.currentColumn);
         }
 
         if (symbol != "") {
