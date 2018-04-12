@@ -56,7 +56,7 @@ public class Lexer
                 this.tokens.add(new Token("newline",
                                           TokenType.NEWLINE,
                                           this.currentLine,
-                                          getTokenStart("\n")));
+                                          this.currentColumn));
                 c = moveToNextCharacter();
             } else if (!Character.isWhitespace(c)) {
                 c = handleOperators();
@@ -71,6 +71,8 @@ public class Lexer
         char c = this.source.charAt(this.currentCharIndex);
         boolean hasDecimalPoint = false;
         String number = "";
+        int numberStartLine = this.currentLine;
+        int numberStartColumn = this.currentColumn;
         while (Character.isDigit(c) || c == '.') {
             if (Character.isDigit(c)) {
                 number += c;
@@ -102,8 +104,8 @@ public class Lexer
 
             this.tokens.add(new Token(number,
                                       type,
-                                      this.currentLine,
-                                      getTokenStart(number)));
+                                      numberStartLine,
+                                      numberStartColumn));
         }
 
         return c;
@@ -124,6 +126,8 @@ public class Lexer
 
         char c = this.source.charAt(this.currentCharIndex);
         boolean mustEscapeCharacter = false;
+        int stringStartLine = this.currentLine;
+        int stringStartColumn = this.currentColumn;
         while ((c != startQuote || mustEscapeCharacter)
                && c != '\0') {  // There must be a pair to the first quote 
                                 // before we exit the loop.
@@ -151,12 +155,12 @@ public class Lexer
             // There might be a few edge cases that would make the presumption false.
             this.tokens.add(new Token(stringToken,
                                       TokenType.STRING,
-                                      this.currentLine,
-                                      getTokenStart(stringToken)));
+                                      stringStartLine,
+                                      stringStartColumn));
         } else {
             throw new SourceException("Expected matching closing quote.",
-                                      this.currentLine,
-                                      getTokenStart(stringToken));
+                                      stringStartLine,
+                                      stringStartColumn);
         }
 
         return c;
@@ -165,6 +169,8 @@ public class Lexer
     private char handleSymbols()
     {
         String symbol = "";
+        int symbolStartLine = this.currentLine;
+        int symbolStartColumn = this.currentColumn;
         char c = this.source.charAt(this.currentCharIndex);
         while (Character.isLetter(c) || Character.isDigit(c) || c == '_') {
             symbol += c;
@@ -207,7 +213,7 @@ public class Lexer
                     break;
             }
 
-            this.tokens.add(new Token(symbol, type, this.currentLine, getTokenStart(symbol)));
+            this.tokens.add(new Token(symbol, type, symbolStartLine, symbolStartColumn));
         }
 
         return c;
@@ -215,6 +221,9 @@ public class Lexer
 
     private char handleOperators() throws SourceException
     {
+        int operatorStartLine = this.currentLine;
+        int operatorStartColumn = this.currentColumn;
+
         String operator = String.format("%c", this.source.charAt(this.currentCharIndex));
         char c = moveToNextCharacter(); // Move to the next character so that we get the right
                                         // operator symbol pair of the operator we captured,
@@ -248,11 +257,11 @@ public class Lexer
         } else {
             // Oh, no!
             throw new SourceException("Unsupported operator.",
-                                      this.currentLine,
-                                      getTokenStart(operator));
+                                      operatorStartLine,
+                                      operatorStartColumn);
         }
 
-        this.tokens.add(new Token(operator, type, this.currentLine, getTokenStart(operator)));
+        this.tokens.add(new Token(operator, type, operatorStartLine, operatorStartColumn));
 
         return c;
     }
@@ -301,12 +310,10 @@ public class Lexer
                 throw new SourceException("Invalid escape sequence. Valid ones are '\\\'', "
                                           + "'\\\"', '\\\\', '\\n', '\\r', '\\t'. '\\b', and '\\f'",
                                           this.currentLine,
-                                          getTokenStart(escapedSequence));
+                                          this.currentColumn - 1);  // We move one column to
+                                                                    // point to the correct
+                                                                    // start of the escape
+                                                                    // sequence.
         }
-    }
-
-    private int getTokenStart(String tokenValue)
-    {
-        return this.currentColumn - tokenValue.length();
     }
 }
