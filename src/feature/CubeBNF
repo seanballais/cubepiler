@@ -1,7 +1,97 @@
 
-Basic Symbols, Identifiers, Numbers, and Strings
+	I. Basic Symbols 
+	II. Identifier 
+	III. Numbers
+	IV. Strings
+	V. Expressions
+	VI. Variables
+	VII. -----------
+	VIII. Arithmetic Expression
+	IX. Boolean Expression
+	X. Assignment Statement
+	XI. Conditional Statement
+	XII. Loop Statement
+	XIII. Procedure Statement
+	XIV. Procedure Declaration	
 
-	The reference language is built up from the following 
+	PROGRAM
+
+		<program> := <declaration> <main declaration> | <main declaration> <declaration> |
+		<main declaration> | <declaration>
+
+		<declaration> := <variable declaration> | <procedure declaration>	
+
+		<main declaration> := fn main ( ) <procedure body> end				
+
+		<procedure body> := <basic statement> | <code>
+
+		<code> := <code> <basic statement>		
+
+		<basic statement> := <assignment statement> | <procedure statement> | 
+		<basic statement> <assignment statement> | <basic statement> <procedure statement> 		
+
+	VARIABLE DECLARATION:
+
+		<variable identifier> := <identifier>			
+		
+		<variable declaration> := <variable identifier>
+
+	PROCEDURE DECLARATION
+		
+		<formal parameter> := <identifier>
+
+		<formal parameter list> := <formal parameter> | <formal parameter list>, <formal parameter>
+
+		<formal parameter part> := (<empty>) | (<formal parameter list>)
+
+		<procedure heading> := <procedure identifier> <formal parameter part>
+
+		<code> := <code> <basic statement>
+
+		<procedure body> := <basic statement> | <code>
+
+		<procedure declaration> := fn <procedure heading> <procedure body> end
+
+	CONDITIONAL STATEMENTS
+	
+		<if clause> := if <boolean expression> do
+		
+		<basic statement> := <assignment statement> | <procedure statement> | <basic statement <assignment statement> | <basic statement> <procedure statement>
+
+		<if statement> := <if clause> <basic statement>
+
+		<conditional statement> := <if statement> end | <if statement> else do <conditional statement> end
+
+
+	LOOP STATEMENTS
+		
+		<while clause> := while <boolean expression> do
+
+		<basic statement> := <assignment statement> | <procedure statement> | 
+		<basic statement> <assignment statement> | <basic statement> <procedure statement> 
+
+		<while statement> := <while clause> <basic statement> | 
+		<while clause> <while statement> <basic statement>
+
+		<loop statement> := <while statement> end
+
+	PROCEDURE STATEMENTS		
+
+		<actual parameter> := <string> | <expression> | <procedure identifier>
+
+		<actual parameter list> := <actual parameter> | <actual parameter list> , <actual parameter>
+
+		<actual parameter part> := <empty> | (<actual parameter list>)
+
+		<procedure statement> := <procedure identifier> <actual parameter part>
+
+
+		Examples:	Transpose(W, v+1)
+					Max(1, 2, 3, 4, 5)
+
+		**Semantics:
+			The procedure statement serves to invoke (call for) the execution of a procedure body.
+
 	BASIC SYMBOLS:
 
 		<basic symbol> := <letter> | <digit> | <logical value> | <delimiter>
@@ -29,9 +119,10 @@ Basic Symbols, Identifiers, Numbers, and Strings
 		
 		<bracket> := ( | ) | [ | ] | do | end
 
-	**Letters do not have individual meaning. They are used for 
-	forming identifiers and strings. Digits are used for forming numbers,
-	identifiers, and strings.)		
+	**Semantics: 
+		Letters do not have individual meaning. They are used for 
+		forming identifiers and strings. Digits are used for forming numbers,
+		identifiers, and strings.
 
 	
 	IDENTIFIER Syntax:
@@ -61,7 +152,6 @@ Basic Symbols, Identifiers, Numbers, and Strings
 		<number> := <unsigned number> | - <unsigned number>
 
 
-
 		Examples: 0, 117, -117, .4123, 9.001, -.4123, -9.001
 
 
@@ -74,33 +164,7 @@ Basic Symbols, Identifiers, Numbers, and Strings
 
 	EXPRESSIONS Syntax:
 
-		<expression> := <arithmetic expression> | <boolean expression> 
-						| <designational expression>
-
-
-	VARIABLES Syntax:
-
-		<variable identifier> := <identifier>			
-		
-		<variable> := <variable identifier>
-
-
-	FUNCTION DESIGNATORS Syntax:
-
-		<procedure identifier> := <identifier>
-
-		<actual parameter> := <string> | <expression> | <procedure identifier>
-
-		<letter string> := <letter> | <letter string> <letter> 
-
-		<actual parameter list> := <actual parameter> | <actual parameter list> , <actual parameter>
-
-		<actual parameter part> := <empty> | (<actual parameter list>)
-
-		<function designator> := <procedure identifier> <actual parameter part>
-
-
-		Examples: nuke("Tacloban"), nuke(n + 1, cities)
+		<expression> := <arithmetic expression> | <boolean expression> 							
 
 
 	ARITHMETIC EXPRESSIONS Syntax:
@@ -139,17 +203,48 @@ Basic Symbols, Identifiers, Numbers, and Strings
 		<boolean expression> := <simple boolean> | <if clause> <boolean term> else <boolean expression>
 
 
-	COMPOUND STATEMENTS and BLOCKS
-		...
-
 	ASSIGNMENT STATEMENTS
-		...
-	CONDITIONAL STATEMENTS
-		...
-	FOR STATEMENTS
-		...
-	PROCEDURE STATEMENTS
-		...
-	PROCEDURE DECLARATION
-		...
+
+		VERSION 1: Allowing multiple variables to be assigned to a value in one statement.
+		
+
+			<left part> := <variable> = 
+
+			<left part list> := <left part> | <left part list> <left part>
+
+			<assignment statement> := <left part list> <arithmetic expression> | <left part list> <boolean expression> | <left part list> <procedure identifier>
+
+
+
+			Examples:	var1 = var2 = var3 = 1 + 1;
+						var4 = var5 = true && false 
+
+			**Semantics:
+				Assignment statements serve for assigning the value of an expression to one or several
+				variables. The expression of the statement (arithmetic or boolean) is evaluated in 
+				sequence from left to right. 			
+				Case <assignment statement> := <left part list> <procedure identifier>
+				may only occur on procedures that return a value... e.g.
+						
+						var_name = getValue    
+
+				where getValue is a procedure that returns a value. This option is irrelevant (at 
+				least for now) if our language does not support procedures that return a value.
+				Lastly, the value of the expression is assigned to all the left part variables.
+
+
+		VERSION 2: Only one variable can be assigned in one statement.
+
+			
+			<left part> := <variable> = 			
+
+			<assignment statement> := <left part> <arithmetic expression> | 
+			<left part> <boolean expression> | <left part> <procedure identifier>
+
+
+			Examples:	var1 = 1 + 1;
+						var4 = true && false 
+
+
+		
 
