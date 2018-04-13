@@ -1,6 +1,6 @@
 import lexer.Lexer;
-import lexer.SourceException;
 import lexer.Token;
+import exceptions.SourceException;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
