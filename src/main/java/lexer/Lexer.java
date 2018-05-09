@@ -54,6 +54,8 @@ public class Lexer
                 c = handleStrings('\'');
             } else if (Character.isLetter(c)) {
                 c = handleSymbols();
+            } else if (c == '#') {
+                c = handleComments();
             } else if (c == '\n') {                
                 this.tokens.add(new Token("newline",
                                           TokenType.NEWLINE,
@@ -290,6 +292,16 @@ public class Lexer
         }
 
         this.tokens.add(new Token(operator, type, operatorStartLine, operatorStartColumn));
+
+        return c;
+    }
+
+    private char handleComments()
+    {
+        char c = this.source.charAt(this.currentCharIndex);
+        while (c != '\n') {
+            c = moveToNextCharacter();
+        }
 
         return c;
     }

@@ -2,6 +2,7 @@ fn add(num1, num2)
     return num1 + num2
 end
 
+#This is a comment
 fn main()
     var x = 123
     var x1 = 1
