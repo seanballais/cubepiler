@@ -220,6 +220,12 @@ public class Lexer
                 case "return":
                     type = TokenType.RETURN_KEYWORD;
                     break;
+                case "next":
+                    type = TokenType.NEXT_KEYWORD;
+                    break;
+                case "do":
+                    type = TokenType.BEGIN_KEYWORD;
+                    break;
                 case "end":
                     type = TokenType.END_KEYWORD;
                     break;
@@ -240,6 +246,12 @@ public class Lexer
                     break;
                 case "false":
                     type = TokenType.BOOLEAN;
+                    break;
+                case "none":
+                    type = TokenType.NONE;
+                    break;
+                case "while":
+                    type = TokenType.WHILE_KEYWORD;
                     break;
                 default:
                     type = TokenType.USER_DEFINED_SYMBOL;
