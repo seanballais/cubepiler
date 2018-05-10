@@ -1,4 +1,4 @@
-package lexer;
+package ds.token;
 
 public class Token
 {

@@ -2,8 +2,22 @@ fn add(num1, num2)
     return num1 + num2
 end
 
+#This is a comment
 fn main()
     var x = 123
     var x1 = 1
+    var y
     print("The sum of 1 and 1 is " + add(1, 1))
+
+    y = 5
+    while (y > 0) do
+        print('y is ' + y)
+        y = y - 1
+
+        if y % 2 == 0 do
+            print('Even!')
+        else
+            print('Odd!')
+        end
+    end
 end

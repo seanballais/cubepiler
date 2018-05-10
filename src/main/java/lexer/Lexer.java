@@ -5,6 +5,9 @@ import exceptions.SourceException;
 import java.util.LinkedList;
 import java.util.HashSet;
 
+import ds.token.Token;
+import ds.token.TokenType;
+
 public class Lexer
 {
     private String source;

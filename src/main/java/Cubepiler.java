@@ -1,5 +1,5 @@
 import lexer.Lexer;
-import lexer.Token;
+import ds.token.Token;
 import exceptions.SourceException;
 
 import java.io.FileReader;
