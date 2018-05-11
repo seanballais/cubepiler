@@ -24,9 +24,9 @@ public class ArithmeticOperationNode extends OperationNode
             throw new RuntimeException("Cannot perform arithmetic operations with a none type.",
                                        this.startingLine, this.startingColumn);
         } else if (value1.getType() == ValueType.STRING || value2.getType() == ValueType.STRING) {
-            return new Value(value1.getValue() + value.getValue, ValueType.STRING);
+            return new Value(value1.getValue() + value2.getValue(), ValueType.STRING);
         } else if (value1.getType() == ValueType.FLOAT || value2.getType() == ValueType.FLOAT) {
-            return new Value("" + this.computeFloat(value1, value2), ValueType.FLOAT)
+            return new Value("" + this.computeFloat(value1, value2), ValueType.FLOAT);
         } else if (value1.getType() == ValueType.INTEGER || value2.getType() == ValueType.INTEGER) {
             return new Value("" + this.computeInt(value1, value2), ValueType.INTEGER);
         } else {
@@ -34,7 +34,7 @@ public class ArithmeticOperationNode extends OperationNode
             if (resultType == ValueType.INTEGER) {
                 return new Value("" + this.computeInt(value1, value2), ValueType.INTEGER);
             } else if (resultType == ValueType.FLOAT) {
-                return new Value("" + this.computeFloat(value1, value2), ValueType.FLOAT)
+                return new Value("" + this.computeFloat(value1, value2), ValueType.FLOAT);
             } else {
                 throw new RuntimeException("Cannot perform arithmetic operations with unknown types.",
                                            this.startingLine, this.startingColumn);
@@ -57,6 +57,8 @@ public class ArithmeticOperationNode extends OperationNode
                 return value1 / value2;
             case "%":
                 return value1 % value2;
+            default:
+                return 0.0f; // Fallback value.
         }
     }
 
@@ -75,6 +77,8 @@ public class ArithmeticOperationNode extends OperationNode
                 return value1 / value2;
             case "%":
                 return value1 % value2;
+            default:
+                return 0; // Fallback value.
         }
     }
 }

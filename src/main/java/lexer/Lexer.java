@@ -3,7 +3,6 @@ package lexer;
 import exceptions.SourceException;
 
 import java.util.LinkedList;
-import java.util.HashSet;
 
 import ds.token.Token;
 import ds.token.TokenType;
@@ -12,7 +11,6 @@ public class Lexer
 {
     private String source;
     private LinkedList<Token> tokens;
-    private HashSet<String> reservedSymbols;
     private int currentLine;
     private int currentColumn;
     private int currentCharIndex;
@@ -20,7 +18,6 @@ public class Lexer
     public Lexer()
     {
         this.tokens = new LinkedList<>();
-        this.reservedSymbols = new HashSet<>();
 
         // We start at 1 for the rows and columns since they usually
         // start at 1, notably in text editors.
@@ -103,7 +100,7 @@ public class Lexer
                                                                       // wrong character and not
                                                                       // the decimal point itself,
                                                                       // in the error message.
-                                                                      // TODO: Please fix this.
+                                                                      // NOTE: Please fix this.
                 }
             } else {
                 throw new SourceException("Unexpected character.",

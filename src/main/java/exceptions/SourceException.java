@@ -2,6 +2,8 @@ package exceptions;
 
 public class SourceException extends Exception
 {
+    private static final long serialVersionUID = 5504805705305505310L;
+
     public SourceException() {}
 
     public SourceException(String message, int row, int column)
