@@ -1,5 +1,6 @@
 package ds.ast;
 
+import exceptions.CompilerException;
 import exceptions.RuntimeException;
 
 public abstract class OperationNode extends ASTNode implements Computable
@@ -17,5 +18,5 @@ public abstract class OperationNode extends ASTNode implements Computable
         this.operator2 = operator2;
     }
 
-    public abstract Value compute() throws RuntimeException;
+    public abstract Value compute() throws RuntimeException, CompilerException;
 }

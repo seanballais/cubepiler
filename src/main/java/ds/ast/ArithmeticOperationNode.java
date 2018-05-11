@@ -1,5 +1,6 @@
 package ds.ast;
 
+import exceptions.CompilerException;
 import exceptions.RuntimeException;
 
 public class ArithmeticOperationNode extends OperationNode
@@ -9,10 +10,18 @@ public class ArithmeticOperationNode extends OperationNode
         super(operation, operator1, operator2, startingLine, startingColumn);
     }
 
-    public Value compute() throws RuntimeException
+    public Value compute() throws RuntimeException, CompilerException
     {
         Value value1 = this.operator1.compute();
         Value value2 = this.operator2.compute();
+
+        if (value1.getValue().equals("")) {
+            throw new CompilerException("value1 in ArithmeticOperationNode should not be empty",
+                                        this.startingLine, this.startingColumn);
+        } else if (value2.getValue().equals("")) {
+            throw new CompilerException("value2 in ArithmeticOperationNode should not be empty",
+                                        this.startingLine, this.startingColumn);
+        }
 
         // Identify resulting value type.
         // NOTE: Operations between booleans and integers/floats, and None and integers/floats are
@@ -57,6 +66,8 @@ public class ArithmeticOperationNode extends OperationNode
                 return value1 / value2;
             case "%":
                 return value1 % value2;
+            case "^":
+                return (float) Math.pow(value1, value2);
             default:
                 return 0.0f; // Fallback value.
         }
@@ -77,6 +88,8 @@ public class ArithmeticOperationNode extends OperationNode
                 return value1 / value2;
             case "%":
                 return value1 % value2;
+            case "^":
+                return (int) Math.pow(value1, value2);
             default:
                 return 0; // Fallback value.
         }
