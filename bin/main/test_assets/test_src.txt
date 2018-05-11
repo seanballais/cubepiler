@@ -12,7 +12,7 @@ fn main()
     y = 5
     while (y > 0) do
         print('y is ' + y)
-        y = y - 1
+        y -= 1
 
         if y % 2 == 0 do
             print('Even!')
