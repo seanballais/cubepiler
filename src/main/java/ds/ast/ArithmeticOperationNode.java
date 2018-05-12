@@ -41,16 +41,9 @@ public class ArithmeticOperationNode extends OperationNode
         } else if (value1.getType() == ValueType.INTEGER || value2.getType() == ValueType.INTEGER) {
             return new Value("" + this.computeInt(value1, value2), ValueType.INTEGER);
         } else {
-            ValueType resultType = value1.getType(); // This assumes that both have the same types.
-            if (resultType == ValueType.INTEGER) {
-                return new Value("" + this.computeInt(value1, value2), ValueType.INTEGER);
-            } else if (resultType == ValueType.FLOAT) {
-                return new Value("" + this.computeFloat(value1, value2), ValueType.FLOAT);
-            } else {
-                throw new CompilerException("Cannot perform arithmetic operations with unknown types in"
-                                            + " ArithmeticOperationNode.",
-                                            this.startingLine, this.startingColumn);
-            }
+            throw new CompilerException("Cannot perform arithmetic operations with unknown types in"
+                                        + " ArithmeticOperationNode.",
+                                        this.startingLine, this.startingColumn);
         }
     }
 
