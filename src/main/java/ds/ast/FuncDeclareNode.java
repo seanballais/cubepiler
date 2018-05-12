@@ -2,24 +2,21 @@ package ds.ast;
 
 import java.util.ArrayList;
 
-import exceptions.RuntimeException;
 import exceptions.CompilerException;
 
 public class FuncDeclareNode extends ASTNode implements Evaluatable
 {
     private String funcName;
     private Value[] arguments;
-    private ArrayList<StatementNode> statements;
-    private int statementIndex;
+    private StatementNode statements;
 
     public FuncDeclareNode(String funcName, Value[] arguments,
-                           int startingLine, int startingColumn) throws RuntimeException, CompilerException
+                           int startingLine, int startingColumn) throws CompilerException
     {
         super(startingLine, startingColumn);
 
         this.funcName = funcName;
         this.arguments = arguments;
-        this.statementIndex = 0;
     }
 
     public String getName()
@@ -34,21 +31,21 @@ public class FuncDeclareNode extends ASTNode implements Evaluatable
 
     public void addStatement(StatementNode statement)
     {
-        this.statements.add(statement);
+        this.statements.addNode(statement);
     }
 
-    public Evaluatable nextNode() throws CompilerException
+    public Evaluatable nextStatement() throws CompilerException
     {
         if (!this.hasNext()) {
             throw new CompilerException("No more evaluatable statements available.",
                                         this.startingLine, this.startingColumn);
         }
 
-        return this.statements.get(this.statementIndex++);
+        return this.statements.nextNode();
     }
 
     public boolean hasNext()
     {
-        return this.statementIndex < this.statements.size();
+        return this.statements.hasNext();
     }
 }

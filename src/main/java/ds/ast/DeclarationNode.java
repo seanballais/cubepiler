@@ -6,7 +6,7 @@ import exceptions.CompilerException;
 public class DeclarationNode extends ASTNode implements Evaluatable
 {
     protected String variableName;
-    protected Value value;
+    protected Computable value;
 
     public DeclarationNode(String variableName, Computable value,
                            int startingLine, int startingColumn) throws RuntimeException, CompilerException
@@ -14,7 +14,7 @@ public class DeclarationNode extends ASTNode implements Evaluatable
         super(startingLine, startingColumn);
 
         this.variableName = variableName;
-        this.value = value.compute();
+        this.value = value;
     }
 
     public String getName()
@@ -22,7 +22,7 @@ public class DeclarationNode extends ASTNode implements Evaluatable
         return this.variableName;
     }
 
-    public Value getValue()
+    public Computable getValue()
     {
         return this.value;
     }

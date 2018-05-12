@@ -18,5 +18,5 @@ public abstract class OperationNode extends ASTNode implements Computable
         this.operator2 = operator2;
     }
 
-    public abstract Value compute() throws RuntimeException, CompilerException;
+    // public abstract Value compute() throws RuntimeException, CompilerException;
 }

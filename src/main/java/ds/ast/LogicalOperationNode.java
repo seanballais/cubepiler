@@ -10,7 +10,7 @@ public class LogicalOperationNode extends OperationNode
         super(operation, operator1, operator2, startingLine, startingColumn);
     }
 
-    public Value compute() throws RuntimeException, CompilerException
+    /**public Value compute() throws RuntimeException, CompilerException
     {
         Value value1 = this.operator1.compute();
         Value value2 = this.operator2.compute();
@@ -52,5 +52,5 @@ public class LogicalOperationNode extends OperationNode
         }
 
         return result;
-    }
+    }**/
 }
