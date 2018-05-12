@@ -24,7 +24,7 @@ public class StatementNode extends ASTNode implements Evaluatable
 
     public Evaluatable nextNode() throws CompilerException
     {
-        if (this.hasNext()) {
+        if (!this.hasNext()) {
             throw new CompilerException("No more evaluatable nodes available.",
                                         this.startingLine, this.startingColumn);
         }
@@ -34,6 +34,6 @@ public class StatementNode extends ASTNode implements Evaluatable
 
     public boolean hasNext()
     {
-        return this.index >= this.nodes.size();
+        return this.index < this.nodes.size();
     }
 }
