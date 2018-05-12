@@ -285,6 +285,9 @@ public class Lexer
                 || operator.equals("/") || operator.equals("/=")
                 || operator.equals("%") || operator.equals("%=")
                 || operator.equals("^") || operator.equals("^=")) {
+            // Remember that
+            // x /= 1
+            // can be degenerated to x = x / 1.
             type = TokenType.ARITHMETIC_OPERATOR;
         } else if (operator.equals("=")) {
             type = TokenType.ASSIGNMENT_OPERATOR;

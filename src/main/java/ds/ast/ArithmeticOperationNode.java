@@ -15,10 +15,12 @@ public class ArithmeticOperationNode extends OperationNode
         Value value1 = this.operator1.compute();
         Value value2 = this.operator2.compute();
 
-        if (value1.getValue().equals("")) {
+        if (value1.getValue().equals("") && (value1.getType() != ValueType.NONE
+                                             || value1.getType() != ValueType.STRING)) {
             throw new CompilerException("value1 in ArithmeticOperationNode should not be empty",
                                         this.startingLine, this.startingColumn);
-        } else if (value2.getValue().equals("")) {
+        } else if (value2.getValue().equals("") && (value2.getType() != ValueType.NONE
+                                                    || value2.getType() != ValueType.STRING)) {
             throw new CompilerException("value2 in ArithmeticOperationNode should not be empty",
                                         this.startingLine, this.startingColumn);
         }
@@ -30,7 +32,7 @@ public class ArithmeticOperationNode extends OperationNode
             throw new RuntimeException("Cannot perform arithmetic operations with a boolean.",
                                        this.startingLine, this.startingColumn);
         } else if (value1.getType() == ValueType.NONE || value2.getType() == ValueType.NONE) {
-            throw new RuntimeException("Cannot perform arithmetic operations with a none type.",
+            throw new RuntimeException("Cannot perform arithmetic operations with a none type. Specify a value first.",
                                        this.startingLine, this.startingColumn);
         } else if (value1.getType() == ValueType.STRING || value2.getType() == ValueType.STRING) {
             return new Value(value1.getValue() + value2.getValue(), ValueType.STRING);
@@ -45,8 +47,9 @@ public class ArithmeticOperationNode extends OperationNode
             } else if (resultType == ValueType.FLOAT) {
                 return new Value("" + this.computeFloat(value1, value2), ValueType.FLOAT);
             } else {
-                throw new RuntimeException("Cannot perform arithmetic operations with unknown types.",
-                                           this.startingLine, this.startingColumn);
+                throw new CompilerException("Cannot perform arithmetic operations with unknown types in"
+                                            + " ArithmeticOperationNode.",
+                                            this.startingLine, this.startingColumn);
             }
         }
     }

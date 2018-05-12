@@ -43,8 +43,8 @@ public class LogicalOperationNode extends OperationNode
                     result = new Value(Boolean.toString(b), ValueType.BOOLEAN);
                     break;
                 default:
-                    throw new RuntimeException("Unknown logical operator.",
-                                               this.startingLine, this.startingColumn);
+                    throw new CompilerException("Unknown logical operator in LogicalOperationNode.",
+                                                this.startingLine, this.startingColumn);
             }
         } else {
             throw new RuntimeException("Operators should be of boolean type.",
