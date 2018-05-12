@@ -3,7 +3,7 @@ package ds.ast;
 import exceptions.RuntimeException;
 import exceptions.CompilerException;
 
-public class AssignmentNode extends ASTNode implements Computable
+public class AssignmentNode extends ASTNode implements Evaluatable
 {
     private String variableName;
     private Computable value;
@@ -21,16 +21,8 @@ public class AssignmentNode extends ASTNode implements Computable
         return this.variableName;
     }
 
-    public Value compute() throws RuntimeException, CompilerException
+    public Computable getValue()
     {
-        Value value1 = value.compute();
-
-        if (value1.getValue().equals("") && (value1.getType() != ValueType.NONE
-                                             || value1.getType() != ValueType.STRING)) {
-            throw new CompilerException("value1 in AssignmentNode should not be empty",
-                                        this.startingLine, this.startingColumn);
-        }
-
-        return value1;
+        return this.value;
     }
 }
