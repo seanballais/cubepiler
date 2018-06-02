@@ -1,8 +1,5 @@
 package ds.ast;
 
-import exceptions.CompilerException;
-import exceptions.RuntimeException;
-
 public abstract class OperationNode extends ASTNode implements Computable
 {
     protected String operation;
@@ -16,5 +13,15 @@ public abstract class OperationNode extends ASTNode implements Computable
         this.operation = operation;
         this.operator1 = operator1;
         this.operator2 = operator2;
+    }
+
+    public Computable getOperator1()
+    {
+        return this.operator1;
+    }
+
+    public Computable getOperator2()
+    {
+        return this.operator2;
     }
 }

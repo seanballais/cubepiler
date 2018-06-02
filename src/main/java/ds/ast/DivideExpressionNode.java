@@ -1,6 +1,6 @@
 package ds.ast;
 
-public class DivideExpressionNode extends OperationNode
+public class DivideExpressionNode extends OperationNode implements Computable
 {
     public DivideExpressionNode(String operation, Computable operator1, Computable operator2, int startingLine, int startingColumn)
     {

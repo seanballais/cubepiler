@@ -1,6 +1,6 @@
 package ds.ast;
 
-public class GreaterThanExpressionNode extends OperationNode
+public class GreaterThanExpressionNode extends OperationNode implements Computable
 {
     public GreaterThanExpressionNode(String operation, Computable operator1, Computable operator2, int startingLine, int startingColumn)
     {

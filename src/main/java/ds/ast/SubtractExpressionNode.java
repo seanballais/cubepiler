@@ -1,6 +1,6 @@
 package ds.ast;
 
-public class SubtractExpressionNode extends OperationNode
+public class SubtractExpressionNode extends OperationNode implements Computable
 {
     public SubtractExpressionNode(String operation, Computable operator1, Computable operator2, int startingLine, int startingColumn)
     {

@@ -10,4 +10,14 @@ public abstract class ASTNode
         this.startingLine = startingLine;
         this.startingColumn = startingColumn;
     }
+
+    public int getStartingLine()
+    {
+        return this.startingLine;
+    }
+
+    public int getStartingColumn()
+    {
+        return this.startingColumn;
+    }
 }

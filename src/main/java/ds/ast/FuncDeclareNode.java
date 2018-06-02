@@ -1,7 +1,5 @@
 package ds.ast;
 
-import java.util.ArrayList;
-
 import exceptions.CompilerException;
 
 public class FuncDeclareNode extends ASTNode implements Evaluatable
