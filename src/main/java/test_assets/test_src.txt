@@ -2,7 +2,7 @@ fn add(num1, num2)
     return num1 + num2
 end
 
-#This is a comment
+# This is a comment
 fn main()
     var x = 123
     var x1 = 1
@@ -18,6 +18,6 @@ fn main()
             print('Even!')
         else
             print('Odd!')
-        end
-    end
+    #    end
+    #end
 end
